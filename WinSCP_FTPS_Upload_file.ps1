@@ -32,15 +32,8 @@ try
         {
             Write-Host "Upload of $($transfer.FileName) succeeded"
         }
-    }
-    finally
-    {
-        # Disconnect, clean up
-        $session.Dispose()
-    }
- 
-    exit 0
 }
+
 catch
 {
     Write-Host "Error: $($_.Exception.Message)"
