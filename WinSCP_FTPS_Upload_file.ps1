@@ -1,9 +1,28 @@
-# Upload files
+# Load WinSCP .NET assembly
+Add-Type -Path "WinSCPnet.dll"
+
+# Set up session options
+$sessionOptions = New-Object WinSCP.SessionOptions -Property @{
+    Protocol = [WinSCP.Protocol]::Ftp
+    HostName = "test"
+    UserName = "test"
+    Password = "test"
+    FtpSecure = [WinSCP.FtpSecure]::Implicit
+}
+
+$session = New-Object WinSCP.Session
+
+try
+{
+    # Connect
+    $session.Open($sessionOptions)
+
+    # Upload files
         $transferOptions = New-Object WinSCP.TransferOptions
         $transferOptions.TransferMode = [WinSCP.TransferMode]::Binary
  
         $transferResult =
-            $session.PutFiles("d:\toupload\*", "/home/user/", $False, $transferOptions)
+            $session.PutFiles("d:\EDI_files\*", "/home/test/", $False, $transferOptions)
  
         # Throw on any error
         $transferResult.Check()
@@ -26,3 +45,8 @@ catch
 {
     Write-Host "Error: $($_.Exception.Message)"
     exit 1
+}
+finally
+{
+    $session.Dispose()
+}
